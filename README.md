@@ -9,3 +9,20 @@ So I port it in Go language.
 ```
 % go get github.com/syohex/byzanz-window
 ```
+
+## Example
+
+```
+% byzanz-window --second 30 --delay 5 --cursor output.gif
+```
+
+## Options
+
+Some option names are changed from original ones.
+
+|option       |Description         |Default |
+|-------------|--------------------|--------|
+|-s, --second |Record seconds      |10      |
+|-d, --delay  |Delay before start  |1       |
+|-c, --cursor |Record mouse cursor |false   |
+|-a, --audio  |Record audio        |false   |
