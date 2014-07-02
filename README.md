@@ -10,6 +10,13 @@ So I port it in Go language.
 % go get github.com/syohex/byzanz-window
 ```
 
+## Requirement Packages
+
+Ubuntu
+- byzanz
+- xdotool
+- x11-utils(`xprop`, `xwininfo`)
+
 ## Example
 
 ```
