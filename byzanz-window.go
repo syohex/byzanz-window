@@ -37,7 +37,7 @@ type byzanzArg struct {
 	y        int
 	width    int
 	height   int
-	seconds int
+	duration int
 	delay    int
 	cursor   bool
 	audio    bool
@@ -174,7 +174,7 @@ func record(arg *byzanzArg) error {
 		`-y`, strconv.Itoa(arg.y),
 		`-w`, strconv.Itoa(arg.width),
 		`-h`, strconv.Itoa(arg.height),
-		`-d`, strconv.Itoa(arg.seconds),
+		`-d`, strconv.Itoa(arg.duration),
 		`--delay`, strconv.Itoa(arg.delay),
 		arg.output,
 	)
@@ -191,8 +191,8 @@ func record(arg *byzanzArg) error {
 }
 
 func main() {
-	seconds := flag.IntP("seconds", "s", 10, "Capture duration(seconds)")
-	delay := flag.IntP("delay", "d", 1, "Delay before start")
+	duration := flag.IntP("duration", "d", 10, "Capture duration(duration)")
+	delay := flag.IntP("delay", "", 1, "Delay before start")
 	cursor := flag.BoolP("cursor", "c", false, "Record mouse cursor")
 	audio := flag.BoolP("audio", "a", false, "Record audio")
 	flag.Parse()
@@ -220,7 +220,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	arg.seconds = *seconds
+	arg.duration = *duration
 	arg.delay = *delay
 	arg.cursor = *cursor
 	arg.audio = *audio

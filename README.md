@@ -20,19 +20,19 @@ Ubuntu
 ## Example
 
 ```
-% byzanz-window --second 30 --delay 5 --cursor output.gif
+% byzanz-window --duration=30 --delay=5 --cursor output.gif
 ```
 
 ## Options
 
 Some option names are changed from original ones.
 
-|option       |Description         |Default |
-|-------------|--------------------|--------|
-|-s, --second |Record seconds      |10      |
-|-d, --delay  |Delay before start  |1       |
-|-c, --cursor |Record mouse cursor |false   |
-|-a, --audio  |Record audio        |false   |
+|option        |Description         |Default |
+|--------------|--------------------|--------|
+|-d, --duration|Record seconds      |10      |
+|--delay       |Delay before start  |1       |
+|-c, --cursor  |Record mouse cursor |false   |
+|-a, --audio   |Record audio        |false   |
 
 ## Recording Steps
 
@@ -40,7 +40,7 @@ Some option names are changed from original ones.
 
 ```
 # Record 20 seconds
-% byzanz-window --second 20 --delay 5 --cursor output.gif
+% byzanz-window --duration=20 --delay=5 --cursor output.gif
 ```
 
 ### 2. Select Window
@@ -53,6 +53,6 @@ You type **Return** key, then recording starts after `--delay` second(Default: 1
 
 ### 4. Gif is generated
 
-After `--seconds` seconds(Default: 10 seconds), Gif file is generated.
+After `--duration` seconds(Default: 10 seconds), Gif file is generated.
 
 Have fun!!
