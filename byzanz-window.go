@@ -190,11 +190,58 @@ func record(arg *byzanzArg) error {
 	return nil
 }
 
+var xrectselRe = regexp.MustCompile(`(\d+)x(\d+)\+(\d+)\+(\d+)`)
+
+func getSelectedRectangle() (*byzanzArg, error) {
+	bytes, err := exec.Command(`xrectsel`).Output()
+	if err != nil {
+		return nil, err
+	}
+
+	rectangle := string(bytes)
+	rectangle = strings.TrimRight(rectangle, "\n")
+
+	match := xrectselRe.FindStringSubmatch(rectangle)
+	if match == nil {
+		return nil, errors.New(`Can't find 'rectangle' information` + rectangle)
+	}
+
+	x, err := strconv.ParseInt(match[3], 10, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	y, err := strconv.ParseInt(match[4], 10, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	width, err := strconv.ParseInt(match[1], 10, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	height, err := strconv.ParseInt(match[2], 10, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	arg := &byzanzArg{
+		x: int(x),
+		y: int(y),
+		width: int(width),
+		height: int(height),
+	}
+
+	return arg, nil
+}
+
 func main() {
 	duration := flag.IntP("duration", "d", 10, "Capture duration(duration)")
 	delay := flag.IntP("delay", "", 1, "Delay before start")
 	cursor := flag.BoolP("cursor", "c", false, "Record mouse cursor")
 	audio := flag.BoolP("audio", "a", false, "Record audio")
+	rect := flag.BoolP("rectangle", "r", false, "Record specified rectangleRecord audio")
 	flag.Parse()
 
 	outputGif := flag.Arg(0)
@@ -203,21 +250,31 @@ func main() {
 		os.Exit(1)
 	}
 
-	winid, err := selectWindow()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+	var arg *byzanzArg
+	if *rect {
+		var err error
+		arg, err = getSelectedRectangle()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+	} else {
+		winid, err := selectWindow()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 
-	arg, err := getWindowInformation(winid)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+		arg, err = getWindowInformation(winid)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 
-	if err := focusWindow(winid); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		if err := focusWindow(winid); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	}
 
 	arg.duration = *duration
