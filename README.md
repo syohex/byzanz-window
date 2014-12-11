@@ -36,6 +36,8 @@ Some option names are changed from original ones.
 |-a, --audio     |Record audio                   |false   |
 |-r, --rectangle |Record in rectangle            |false   |
 
+zsh completion is [here](https://github.com/syohex/zsh-go-completions/blob/master/_byzanz-window)
+
 ## Recording Steps
 
 ### 1. Execute `byzanz-window`
