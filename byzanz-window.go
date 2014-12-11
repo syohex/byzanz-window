@@ -237,7 +237,7 @@ func getSelectedRectangle() (*byzanzArg, error) {
 }
 
 func main() {
-	duration := flag.IntP("duration", "d", 10, "Capture duration(duration)")
+	duration := flag.IntP("duration", "d", 10, "Capture duration(second)")
 	delay := flag.IntP("delay", "", 1, "Delay before start")
 	cursor := flag.BoolP("cursor", "c", false, "Record mouse cursor")
 	audio := flag.BoolP("audio", "a", false, "Record audio")
