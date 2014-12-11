@@ -28,13 +28,13 @@ Ubuntu
 
 Some option names are changed from original ones.
 
-|option          |Description         |Default |
-|----------------|--------------------|--------|
-|-d, --duration  |Record seconds      |10      |
-|--delay         |Delay before start  |1       |
-|-c, --cursor    |Record mouse cursor |false   |
-|-a, --audio     |Record audio        |false   |
-|-r, --rectangle |Record in rectangle |false   |
+|option          |Description                    |Default |
+|----------------|-------------------------------|--------|
+|-d, --duration  |Record seconds                 |10      |
+|--delay         |Delay seconds before recording |1       |
+|-c, --cursor    |Record mouse cursor            |false   |
+|-a, --audio     |Record audio                   |false   |
+|-r, --rectangle |Record in rectangle            |false   |
 
 ## Recording Steps
 

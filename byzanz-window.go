@@ -238,10 +238,10 @@ func getSelectedRectangle() (*byzanzArg, error) {
 
 func main() {
 	duration := flag.IntP("duration", "d", 10, "Capture duration(second)")
-	delay := flag.IntP("delay", "", 1, "Delay before start")
+	delay := flag.IntP("delay", "", 1, "Delay before recording(second)")
 	cursor := flag.BoolP("cursor", "c", false, "Record mouse cursor")
 	audio := flag.BoolP("audio", "a", false, "Record audio")
-	rect := flag.BoolP("rectangle", "r", false, "Record specified rectangleRecord audio")
+	rect := flag.BoolP("rectangle", "r", false, "Record specified rectangle")
 	flag.Parse()
 
 	outputGif := flag.Arg(0)
