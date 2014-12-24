@@ -16,7 +16,6 @@ Ubuntu
 - byzanz
 - xdotool
 - x11-utils(`xprop`, `xwininfo`)
-- [xrectsel](https://github.com/lolilolicon/xrectsel)(for using `-r`, `--rectangle`)
 
 ## Example
 
@@ -28,13 +27,13 @@ Ubuntu
 
 Some option names are changed from original ones.
 
-|option          |Description                    |Default |
-|----------------|-------------------------------|--------|
-|-d, --duration  |Record seconds                 |10      |
-|--delay         |Delay seconds before recording |1       |
-|-c, --cursor    |Record mouse cursor            |false   |
-|-a, --audio     |Record audio                   |false   |
-|-r, --rectangle |Record in rectangle            |false   |
+|option          |Description                     |Default |
+|----------------|--------------------------------|--------|
+|-d, --duration  |Record seconds                  |10      |
+|--delay         |Delay seconds before recording  |1       |
+|-c, --cursor    |Record mouse cursor             |false   |
+|-a, --audio     |Record audio                    |false   |
+|-r, --rectangle |Record in rectangle(Linux Only) |false   |
 
 zsh completion is [here](https://github.com/syohex/zsh-go-completions/blob/master/_byzanz-window)
 
