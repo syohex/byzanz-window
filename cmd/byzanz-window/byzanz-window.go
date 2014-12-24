@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/syohex/byzanz-window"
 	flag "github.com/ogier/pflag"
 )
 
@@ -193,44 +194,16 @@ func record(arg *byzanzArg) error {
 var xrectselRe = regexp.MustCompile(`(\d+)x(\d+)\+(\d+)\+(\d+)`)
 
 func getSelectedRectangle() (*byzanzArg, error) {
-	bytes, err := exec.Command(`xrectsel`).Output()
-	if err != nil {
-		return nil, err
-	}
-
-	rectangle := string(bytes)
-	rectangle = strings.TrimRight(rectangle, "\n")
-
-	match := xrectselRe.FindStringSubmatch(rectangle)
-	if match == nil {
-		return nil, errors.New(`Can't find 'rectangle' information` + rectangle)
-	}
-
-	x, err := strconv.ParseInt(match[3], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	y, err := strconv.ParseInt(match[4], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	width, err := strconv.ParseInt(match[1], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	height, err := strconv.ParseInt(match[2], 10, 32)
+	rect, err := byzanz.SelectWindow()
 	if err != nil {
 		return nil, err
 	}
 
 	arg := &byzanzArg{
-		x: int(x),
-		y: int(y),
-		width: int(width),
-		height: int(height),
+		x: rect.X,
+		y: rect.Y,
+		width: rect.Width,
+		height: rect.Height,
 	}
 
 	return arg, nil
