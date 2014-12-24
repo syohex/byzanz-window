@@ -7,7 +7,7 @@ So I port it in Go language.
 ## Installation
 
 ```
-% go get github.com/syohex/byzanz-window
+% go get github.com/syohex/byzanz-window/cmd/byzanz-window
 ```
 
 ## Requirement Packages
