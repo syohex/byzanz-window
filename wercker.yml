@@ -1,36 +1,21 @@
-box: motemen/golang-goxc
+box: tcnksm/gox
 build:
   steps:
     - setup-go-workspace
     - script:
-        name: git version
-        code: |
-          git version
-    - script:
         name: go get
         code: |
-          go version
           go get -t ./...
-    - script:
-        name: goxc build & archive
-        code: |
-          goxc -tasks='xc archive' -bc 'linux,!arm' -d $WERCKER_OUTPUT_DIR/ -build-ldflags "-X main.Version \"$(git describe --tags --always --dirty) ($(git name-rev --name-only HEAD | sed 's/^remotes\/origin\///'))\"" -resources-include='README*'
-    - script:
-        name: output release tag
-        code: |
-          git describe --tags --exact --match 'v*' > $WERCKER_OUTPUT_DIR/.release_tag || true
+    - tcnksm/gox:
+        os: "linux"
+        arch: "386 amd64"
+        ldflags: -X main.GitCommit "$(git describe --always)"
+    - tcnksm/zip:
+        input: ${WERCKER_OUTPUT_DIR}/pkg
+        output: ${WERCKER_OUTPUT_DIR}/dist
 deploy:
   steps:
-    - script:
-        name: restore release tag
-        code: |
-          export RELEASE_TAG=$(cat .release_tag)
-    - wercker/github-create-release:
+    - tcnksm/ghr:
         token: $GITHUB_TOKEN
-        tag: $RELEASE_TAG
-    - wercker/github-upload-asset:
-        token: $GITHUB_TOKEN
-        file: snapshot/byzanz-window_linux_386.tar.gz
-    - wercker/github-upload-asset:
-        token: $GITHUB_TOKEN
-        file: snapshot/byzanz-window_linux_amd64.tar.gz
+        input: dist
+        replace: true
