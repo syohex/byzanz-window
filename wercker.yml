@@ -10,6 +10,8 @@ build:
         os: "linux"
         arch: "386 amd64"
         ldflags: -X main.GitCommit "$(git describe --always)"
+        code: |
+          cd cmd/
     - tcnksm/zip:
         input: ${WERCKER_OUTPUT_DIR}/pkg
         output: ${WERCKER_OUTPUT_DIR}/dist
