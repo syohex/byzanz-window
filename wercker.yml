@@ -14,10 +14,23 @@ build:
     - tcnksm/zip:
         input: ${WERCKER_OUTPUT_DIR}/pkg
         output: ${WERCKER_OUTPUT_DIR}/dist
+    - script:
+        name: output release tag
+        code: |
+          git describe --tags --exact --match 'v*' > $WERCKER_OUTPUT_DIR/.release_tag || true
 deploy:
   steps:
-    - tcnksm/ghr:
+    - script:
+        name: restore release tag
+        code: |
+          export RELEASE_TAG=$(cat .release_tag)
+    - script:
+        name: restore release tag
+        code: |
+          export RELEASE_TAG=$(cat .release_tag)
+    - wercker/github-create-release:
         token: $GITHUB_TOKEN
-        input: dist
-        replace: true
-        version: v0.01
+        tag: $RELEASE_TAG
+    - wercker/github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: snapshot/naisho_linux_amd64.tar.gz
