@@ -6,12 +6,11 @@ build:
         name: go get
         code: |
           go get -t ./...
-    - tcnksm/gox:
-        os: "linux"
-        arch: "386 amd64"
-        ldflags: -X main.GitCommit "$(git describe --always)"
+    - script
+        name: gox build
         code: |
-          cd cmd/
+          cd cmd/byzanz-window
+          gox -os='linux' -arch '386 amd64' -output "${WERCKER_OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
     - tcnksm/zip:
         input: ${WERCKER_OUTPUT_DIR}/pkg
         output: ${WERCKER_OUTPUT_DIR}/dist
