@@ -20,3 +20,4 @@ deploy:
         token: $GITHUB_TOKEN
         input: dist
         replace: true
+        version: v0.01
