@@ -10,7 +10,7 @@ build:
         name: gox build
         code: |
           cd cmd/byzanz-window
-          gox -os='linux' -arch '386 amd64' -output "${WERCKER_OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
+          gox -os='linux' -arch 'amd64' -output "${WERCKER_OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
     - tcnksm/zip:
         input: ${WERCKER_OUTPUT_DIR}/pkg
         output: ${WERCKER_OUTPUT_DIR}/dist
