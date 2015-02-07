@@ -6,7 +6,7 @@ build:
         name: go get
         code: |
           go get -t ./...
-    - script
+    - script:
         name: gox build
         code: |
           cd cmd/byzanz-window
