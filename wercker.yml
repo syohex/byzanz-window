@@ -1,4 +1,4 @@
-box: tcnksm/gox
+box: motemen/golang-goxc
 build:
   steps:
     - setup-go-workspace
@@ -10,10 +10,7 @@ build:
         name: gox build
         code: |
           cd cmd/byzanz-window
-          gox -os='linux' -arch 'amd64' -output "${WERCKER_OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
-    - tcnksm/zip:
-        input: ${WERCKER_OUTPUT_DIR}/pkg
-        output: ${WERCKER_OUTPUT_DIR}/dist
+          goxc -tasks='xc archive' -arch='amd64' -os='linux' -d $WERCKER_OUTPUT_DIR/ -resources-include='README*' -main-dirs-exclude='image'
     - script:
         name: output release tag
         code: |
@@ -24,13 +21,9 @@ deploy:
         name: restore release tag
         code: |
           export RELEASE_TAG=$(cat .release_tag)
-    - script:
-        name: restore release tag
-        code: |
-          export RELEASE_TAG=$(cat .release_tag)
     - wercker/github-create-release:
         token: $GITHUB_TOKEN
         tag: $RELEASE_TAG
     - wercker/github-upload-asset:
         token: $GITHUB_TOKEN
-        file: snapshot/naisho_linux_amd64.tar.gz
+        file: snapshot/byzanz-window_linux_amd64.tar.gz
