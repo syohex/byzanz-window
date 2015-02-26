@@ -48,8 +48,6 @@ zsh completion is [here](https://github.com/syohex/zsh-go-completions/blob/maste
 
 ### 2. Select Window
 
-![select window](image/select-window.png)
-
 ### 3. Start recording
 
 You type **Return** key, then recording starts after `--delay` second(Default: 1 second).
@@ -59,3 +57,14 @@ You type **Return** key, then recording starts after `--delay` second(Default: 1
 After `--duration` seconds(Default: 10 seconds), Gif file is generated.
 
 Have fun!!
+
+
+## Window Capture
+
+![window-capture](image/window-capture1.gif)
+
+Generated gif is
+
+![window-capture-generated](image/window-capture2.gif)
+
+
