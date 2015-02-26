@@ -68,3 +68,10 @@ Generated gif is
 ![window-capture-generated](image/window-capture2.gif)
 
 
+## Rectangle Capture
+
+![rectangle-capture](image/rectangle-capture1.gif)
+
+Generated gif is
+
+![rectangle-capture-generated](image/rectangle-capture2.gif)
