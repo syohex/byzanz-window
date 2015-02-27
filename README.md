@@ -61,6 +61,10 @@ Have fun!!
 
 ## Window Capture
 
+```
+% byzanz-window --duration=seconds --delay=seconds output-file.gif
+```
+
 ![window-capture](image/window-capture1.gif)
 
 Generated gif is
@@ -69,6 +73,10 @@ Generated gif is
 
 
 ## Rectangle Capture
+
+```
+% byzanz-window --rectangle --duration=seconds --delay=seconds output-file.gif # with '--rectangle' option
+```
 
 ![rectangle-capture](image/rectangle-capture1.gif)
 
