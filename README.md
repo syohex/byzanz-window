@@ -12,10 +12,23 @@ So I port it in Go language.
 
 ## Requirement Packages
 
-Ubuntu
+### Ubuntu
 - byzanz
 - xdotool
 - x11-utils(`xprop`, `xwininfo`)
+
+```
+% sudo apt install byzanz xdotool x11-utils
+```
+
+### Fedora
+- byzanz
+- xdotool
+- xorg-x11-utils
+
+```
+% sudo yum install byzanz xdotool xorg-x11-utils
+```
 
 ## Example
 
