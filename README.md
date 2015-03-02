@@ -10,6 +10,8 @@ So I port it in Go language.
 % go get github.com/syohex/byzanz-window/cmd/byzanz-window
 ```
 
+You can also install binary from [here](https://github.com/syohex/byzanz-window/releases).
+
 ## Requirement Packages
 
 ### Ubuntu
