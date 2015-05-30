@@ -1,37 +1,15 @@
 package main
 
 import (
-	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
-	"strings"
 
 	flag "github.com/ogier/pflag"
 	"github.com/syohex/byzanz-window"
 )
-
-func selectWindow() (int, error) {
-	fmt.Println("Select the window which you like to capture.")
-
-	bytes, err := exec.Command(`xdotool`, "selectwindow").Output()
-	if err != nil {
-		return 0, err
-	}
-
-	winidStr := string(bytes)
-	winidStr = strings.TrimRight(winidStr, "\n")
-
-	winid, err := strconv.ParseInt(winidStr, 10, 32)
-	if err != nil {
-		return 0, err
-	}
-
-	return int(winid), nil
-}
 
 type byzanzArg struct {
 	x        int
@@ -43,121 +21,6 @@ type byzanzArg struct {
 	cursor   bool
 	audio    bool
 	output   string
-}
-
-var xRe = regexp.MustCompile(`Absolute upper-left X:\s*(\d+)`)
-var yRe = regexp.MustCompile(`Absolute upper-left Y:\s*(\d+)`)
-var widthRe = regexp.MustCompile(`Width:\s*(\d+)`)
-var heightRe = regexp.MustCompile(`Height:\s*(\d+)`)
-var posRe = regexp.MustCompile(`_NET_FRAME_EXTENTS\(CARDINAL\) = (\d+), (\d+), (\d+), (\d+)`)
-
-func getWindowInformation(winid int) (*byzanzArg, error) {
-	winidStr := strconv.Itoa(winid)
-
-	bytes, err := exec.Command(`xwininfo`, `-id`, winidStr).Output()
-	if err != nil {
-		return nil, err
-	}
-
-	wininfo := string(bytes)
-	wininfo = strings.TrimRight(wininfo, "\n")
-
-	var match []string
-	match = xRe.FindStringSubmatch(wininfo)
-	if match == nil {
-		return nil, errors.New(`can't find 'x' position`)
-	}
-
-	x, err := strconv.ParseInt(match[1], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	match = yRe.FindStringSubmatch(wininfo)
-	if match == nil {
-		return nil, errors.New(`can't find 'y' position`)
-	}
-
-	y, err := strconv.ParseInt(match[1], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	match = widthRe.FindStringSubmatch(wininfo)
-	if match == nil {
-		return nil, errors.New(`can't find 'width'`)
-	}
-
-	width, err := strconv.ParseInt(match[1], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	match = heightRe.FindStringSubmatch(wininfo)
-	if match == nil {
-		return nil, errors.New(`can't find 'height'`)
-	}
-
-	height, err := strconv.ParseInt(match[1], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	xproperty, err := exec.Command(`xprop`, `-id`, winidStr).Output()
-	if err != nil {
-		return nil, err
-	}
-
-	match = posRe.FindStringSubmatch(string(xproperty))
-	if match == nil {
-		return nil, errors.New(`can't find 'position'`)
-	}
-
-	left, err := strconv.ParseInt(match[1], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	right, err := strconv.ParseInt(match[2], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	top, err := strconv.ParseInt(match[3], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	bottom, err := strconv.ParseInt(match[4], 10, 32)
-	if err != nil {
-		return nil, err
-	}
-
-	arg := &byzanzArg{
-		x:      int(x - left),
-		y:      int(y - top),
-		width:  int(width + left + right),
-		height: int(height + top + bottom),
-	}
-
-	return arg, nil
-}
-
-func focusWindow(winid int) error {
-	fmt.Println("Press enter when you are ready to capture.")
-	scanner := bufio.NewScanner(os.Stdin)
-	if scanner.Scan() {
-		_ = scanner.Text()
-	}
-	if err := scanner.Err(); err != nil {
-		return err
-	}
-
-	err := exec.Command(`xdotool`, `windowactivate`, strconv.Itoa(winid)).Run()
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func record(arg *byzanzArg) error {
@@ -191,8 +54,6 @@ func record(arg *byzanzArg) error {
 	return nil
 }
 
-var xrectselRe = regexp.MustCompile(`(\d+)x(\d+)\+(\d+)\+(\d+)`)
-
 func getSelectedRectangle() (*byzanzArg, error) {
 	rect, err := byzanz.SelectWindow()
 	if err != nil {
@@ -204,6 +65,60 @@ func getSelectedRectangle() (*byzanzArg, error) {
 		y:      rect.Y,
 		width:  rect.Width,
 		height: rect.Height,
+	}
+
+	return arg, nil
+}
+
+var rePosition = regexp.MustCompile(`\s*Position: (\d+),(\d+)`)
+var reGeometry = regexp.MustCompile(`\s*Geometry: (\d+)x(\d+)`)
+
+func getWindowRectangle() (*byzanzArg, error) {
+	fmt.Println("Select the window which you like to capture.")
+
+	b, err := exec.Command(
+		"xdotool",
+		"selectwindow",
+		"windowactivate",
+		"getwindowgeometry").Output()
+	if err != nil {
+		return nil, err
+	}
+	s := string(b)
+
+	var x, y, w, h int
+
+	m := rePosition.FindAllStringSubmatch(s, -1)
+	if m == nil {
+		return nil, fmt.Errorf(`can't find Position: %v`, s)
+	}
+	x, err = strconv.Atoi(string(m[0][1]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Position x: %v`, s)
+	}
+	y, err = strconv.Atoi(string(m[0][2]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Position y: %v`, s)
+	}
+
+	m = reGeometry.FindAllStringSubmatch(s, -1)
+	if m == nil {
+		return nil, fmt.Errorf(`can't find Geometry: %v`, s)
+	}
+	w, err = strconv.Atoi(string(m[0][1]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Geometry width: %v`, b)
+	}
+	h, err = strconv.Atoi(string(m[0][2]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Geometry height: %v`, b)
+	}
+
+	arg := &byzanzArg{
+		x:      x,
+		y:      y,
+		width:  w,
+		height: h,
 	}
 
 	return arg, nil
@@ -224,27 +139,16 @@ func main() {
 	}
 
 	var arg *byzanzArg
+	var err error
 	if *rect {
-		var err error
 		arg, err = getSelectedRectangle()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 	} else {
-		winid, err := selectWindow()
+		arg, err = getWindowRectangle()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-
-		arg, err = getWindowInformation(winid)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-
-		if err := focusWindow(winid); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
