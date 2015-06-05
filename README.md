@@ -18,18 +18,20 @@ You can also install binary from [here](https://github.com/syohex/byzanz-window/
 - byzanz
 - xdotool
 - x11-utils(`xprop`, `xwininfo`)
+- libx11-dev
 
 ```
-% sudo apt install byzanz xdotool x11-utils
+% sudo apt install byzanz xdotool x11-utils libx11-dev
 ```
 
 ### Fedora
 - byzanz
 - xdotool
 - xorg-x11-utils
+- libx11-devel
 
 ```
-% sudo yum install byzanz xdotool xorg-x11-utils
+% sudo yum install byzanz xdotool xorg-x11-utils libx11-devel
 ```
 
 ## Example
