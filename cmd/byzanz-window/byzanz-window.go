@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/syohex/byzanz-window"
 	flag "github.com/ogier/pflag"
+	"github.com/syohex/byzanz-window"
 )
 
 func selectWindow() (int, error) {
@@ -200,9 +200,9 @@ func getSelectedRectangle() (*byzanzArg, error) {
 	}
 
 	arg := &byzanzArg{
-		x: rect.X,
-		y: rect.Y,
-		width: rect.Width,
+		x:      rect.X,
+		y:      rect.Y,
+		width:  rect.Width,
 		height: rect.Height,
 	}
 
