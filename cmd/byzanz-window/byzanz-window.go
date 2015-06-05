@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/syohex/byzanz-window"
 	flag "github.com/ogier/pflag"
+	"github.com/syohex/byzanz-window"
 )
 
 func selectWindow() (int, error) {
@@ -108,6 +108,13 @@ func getWindowInformation(winid int) (*byzanzArg, error) {
 		return nil, err
 	}
 
+	if string(xproperty) == "" {
+		// Fallback: On some platform(LXDE), 'xprop -id ID' returns nothing.
+		// Then get window information by xdotool.
+		// Window information by xdotool is missaligned on some platform(Xfce4).
+		return getWindowRectangle(winidStr)
+	}
+
 	match = posRe.FindStringSubmatch(string(xproperty))
 	if match == nil {
 		return nil, errors.New(`can't find 'position'`)
@@ -138,6 +145,54 @@ func getWindowInformation(winid int) (*byzanzArg, error) {
 		y:      int(y - top),
 		width:  int(width + left + right),
 		height: int(height + top + bottom),
+	}
+
+	return arg, nil
+}
+
+var rePosition = regexp.MustCompile(`\s*Position: (\d+),(\d+)`)
+var reGeometry = regexp.MustCompile(`\s*Geometry: (\d+)x(\d+)`)
+
+func getWindowRectangle(winidStr string) (*byzanzArg, error) {
+	b, err := exec.Command("xdotool", "getwindowgeometry", winidStr).Output()
+	if err != nil {
+		return nil, err
+	}
+	s := string(b)
+
+	var x, y, w, h int
+
+	m := rePosition.FindAllStringSubmatch(s, -1)
+	if m == nil {
+		return nil, fmt.Errorf(`can't find Position: %v`, s)
+	}
+	x, err = strconv.Atoi(string(m[0][1]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Position x: %v`, s)
+	}
+	y, err = strconv.Atoi(string(m[0][2]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Position y: %v`, s)
+	}
+
+	m = reGeometry.FindAllStringSubmatch(s, -1)
+	if m == nil {
+		return nil, fmt.Errorf(`can't find Geometry: %v`, s)
+	}
+	w, err = strconv.Atoi(string(m[0][1]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Geometry width: %v`, b)
+	}
+	h, err = strconv.Atoi(string(m[0][2]))
+	if err != nil {
+		return nil, fmt.Errorf(`can't find Geometry height: %v`, b)
+	}
+
+	arg := &byzanzArg{
+		x:      x,
+		y:      y,
+		width:  w,
+		height: h,
 	}
 
 	return arg, nil
@@ -200,9 +255,9 @@ func getSelectedRectangle() (*byzanzArg, error) {
 	}
 
 	arg := &byzanzArg{
-		x: rect.X,
-		y: rect.Y,
-		width: rect.Width,
+		x:      rect.X,
+		y:      rect.Y,
+		width:  rect.Width,
 		height: rect.Height,
 	}
 
