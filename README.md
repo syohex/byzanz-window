@@ -2,7 +2,8 @@
 
 This is Go port of [byzanz_window.py](https://gist.github.com/noamraph/8348560).
 It is very nice python script however it does not work with Python 3.4.
-So I port it in Go language.
+So I port it in Go language. I test on XFce4 and LUbuntu. If byzanz-window does not
+work on your platform please report me via github issue.
 
 ## Installation
 
