@@ -111,7 +111,7 @@ type Rectangle struct {
 	Y      int
 }
 
-func SelectWindow() (*Rectangle, error) {
+func SelectRectangle() (*Rectangle, error) {
 	var tmp C.struct_rectangle
 
 	ret := int(C.select_region((*C.struct_rectangle)(unsafe.Pointer(&tmp))))

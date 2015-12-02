@@ -249,7 +249,7 @@ func record(arg *byzanzArg) error {
 var xrectselRe = regexp.MustCompile(`(\d+)x(\d+)\+(\d+)\+(\d+)`)
 
 func getSelectedRectangle() (*byzanzArg, error) {
-	rect, err := byzanz.SelectWindow()
+	rect, err := byzanz.SelectRectangle()
 	if err != nil {
 		return nil, err
 	}
