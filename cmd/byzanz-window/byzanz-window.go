@@ -117,7 +117,10 @@ func getWindowInformation(winid int) (*byzanzArg, error) {
 
 	match = posRe.FindStringSubmatch(string(xproperty))
 	if match == nil {
-		return nil, errors.New(`can't find 'position'`)
+		// Some windows managers, such as i3, don't support _NET_FRAME_EXTENTS yet.
+		// Ignore window frame information for such window managers(issue #5) and not
+		// capture window frame.
+		match = []string{"0", "0", "0", "0", "0"}
 	}
 
 	left, err := strconv.ParseInt(match[1], 10, 32)
