@@ -14,6 +14,8 @@ import (
 	"github.com/syohex/byzanz-window"
 )
 
+const VERSION = "0.02"
+
 func selectWindow() (int, error) {
 	fmt.Println("Select the window which you like to capture.")
 
@@ -273,7 +275,13 @@ func main() {
 	cursor := flag.BoolP("cursor", "c", false, "Record mouse cursor")
 	audio := flag.BoolP("audio", "a", false, "Record audio")
 	rect := flag.BoolP("rectangle", "r", false, "Record specified rectangle")
+	version := flag.BoolP("version", "v", false, "Show version")
 	flag.Parse()
+
+	if *version {
+		fmt.Println(VERSION)
+		os.Exit(0)
+	}
 
 	outputGif := flag.Arg(0)
 	if outputGif == "" {
