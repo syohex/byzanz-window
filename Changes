@@ -1,0 +1,11 @@
+Revision history for go-impl.el
+
+Revision 0.1.0 2016/07/03 syohex
+    - Implement version flag
+
+Revision 0.0.2 2016/01/27 syohex
+    - Implement fallback for some platform(ex LXDE)
+    - Fix for platforms which don't implement _NET_FRAME_EXTENTS
+
+Revision 0.0.1 2015/02/07 syohex
+    - Initial Release
