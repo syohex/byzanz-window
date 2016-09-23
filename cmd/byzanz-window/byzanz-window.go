@@ -45,6 +45,7 @@ type byzanzArg struct {
 	cursor   bool
 	audio    bool
 	output   string
+	verbose  bool
 }
 
 var xRe = regexp.MustCompile(`Absolute upper-left X:\s*(\d+)`)
@@ -230,6 +231,10 @@ func record(arg *byzanzArg) error {
 		cmdArgs = append(cmdArgs, `-a`)
 	}
 
+	if arg.verbose {
+		cmdArgs = append(cmdArgs, `-v`)
+	}
+
 	cmdArgs = append(cmdArgs,
 		`-x`, strconv.Itoa(arg.x),
 		`-y`, strconv.Itoa(arg.y),
@@ -241,6 +246,9 @@ func record(arg *byzanzArg) error {
 	)
 
 	cmd := exec.Command(`byzanz-record`, cmdArgs...)
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+
 	if err := cmd.Start(); err != nil {
 		return err
 	}
@@ -276,6 +284,7 @@ func main() {
 	audio := flag.BoolP("audio", "a", false, "Record audio")
 	rect := flag.BoolP("rectangle", "r", false, "Record specified rectangle")
 	version := flag.BoolP("version", "v", false, "Show version")
+	verbose := flag.BoolP("verbose", "V", false, "Make the output verbose")
 	flag.Parse()
 
 	if *version {
@@ -321,6 +330,7 @@ func main() {
 	arg.cursor = *cursor
 	arg.audio = *audio
 	arg.output = outputGif
+	arg.verbose = *verbose
 
 	if err := record(arg); err != nil {
 		fmt.Fprintln(os.Stderr, err)
