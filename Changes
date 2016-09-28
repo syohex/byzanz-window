@@ -1,5 +1,8 @@
 Revision history for go-impl.el
 
+Revision 0.1.1 2016/07/03 syohex
+    - Implement verbose flag(Thanks calavera)
+
 Revision 0.1.0 2016/07/03 syohex
     - Implement version flag
 

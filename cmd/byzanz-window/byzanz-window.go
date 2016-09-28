@@ -14,7 +14,7 @@ import (
 	"github.com/syohex/byzanz-window"
 )
 
-const VERSION = "0.1.0"
+const VERSION = "0.1.1"
 
 func selectWindow() (int, error) {
 	fmt.Println("Select the window which you like to capture.")
