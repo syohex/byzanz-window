@@ -1,0 +1,22 @@
+project_name: byzanz-window
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - main: .
+    binary: byzanz-window
+    ldflags:
+      - -s -w
+      - -X main.Version={{.Version}}
+      - -X main.Revision={{.ShortCommit}}
+    env:
+      - CGO_ENABLED=0
+archives:
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ end }}'
+    replacements:
+      linux: linux
+      amd64: x86_64
+release:
+  prerelease: auto

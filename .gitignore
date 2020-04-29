@@ -1,3 +1,6 @@
 byzanz-window
 /_obj/
 /releases/
+/.vscode/
+/.idea/
+*~
