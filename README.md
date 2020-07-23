@@ -29,10 +29,10 @@ You can also install binary from [here](https://github.com/syohex/byzanz-window/
 - byzanz
 - xdotool
 - xorg-x11-utils
-- libx11-devel
+- libX11-devel
 
 ```
-% sudo yum install byzanz xdotool xorg-x11-utils libx11-devel
+% sudo yum install byzanz xdotool xorg-x11-utils libX11-devel
 ```
 
 ## Example
